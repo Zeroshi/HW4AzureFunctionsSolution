@@ -80,7 +80,7 @@ namespace HW4AzureFunctions
         /// <param name="message">The message.</param>
         private static async Task InsertJobTableWithStatus(ILogger log, string jobId, string status, string imageConversionMode, string imageSource)
         {
-            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY, ConfigSettings.SAS);
+            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
             await jobTable.InsertOrReplaceJobEntity(jobId, status, imageConversionMode, imageSource);
         }
 
@@ -93,7 +93,7 @@ namespace HW4AzureFunctions
         /// <param name="message">The message.</param>
         private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, string status, string imageConversionMode, string statusDescription)
         {
-            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY, ConfigSettings.SAS);
+            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
             await jobTable.UpdateJobEntityStatus(jobId, status, imageConversionMode, statusDescription);
         }
 
