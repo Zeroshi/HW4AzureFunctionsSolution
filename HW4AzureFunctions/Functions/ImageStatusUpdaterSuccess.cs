@@ -28,7 +28,7 @@ namespace HW4AzureFunctions
 
 
             var jobId = Guid.NewGuid().ToString();
-            await UpdateJobTableWithStatus(log, jobId, "3", "Image successfully converted", cloudBlockBlob.Uri.AbsolutePath);
+            await UpdateJobTableWithStatus(log, jobId, "3", "Image successfully converted", cloudBlockBlob.Uri.AbsoluteUri);
 
         }
 
