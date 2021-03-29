@@ -1,0 +1,13 @@
+Url: 
+Name: Thomas Nelson
+Class: CSCIE-94 
+Assignment: 4 (Functions)
+Email: thomasvnelson@live.com
+
+Blob SAS:https://cscie94assignment3.blob.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=9PckxyGAsQ6SPwfataMspIqhyaH6UGZVI1EPO6OGuGo%3D
+
+File SAS:https://cscie94assignment3.file.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=9PckxyGAsQ6SPwfataMspIqhyaH6UGZVI1EPO6OGuGo%3D
+
+Queue SAS:https://cscie94assignment3.queue.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=9PckxyGAsQ6SPwfataMspIqhyaH6UGZVI1EPO6OGuGo%3D
+
+Table SAS:https://cscie94assignment3.table.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacupx&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=9PckxyGAsQ6SPwfataMspIqhyaH6UGZVI1EPO6OGuGo%3D
