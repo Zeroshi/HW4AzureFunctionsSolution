@@ -86,7 +86,7 @@ namespace HW4AzureFunctions
             //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
             //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
-            var result = GetJobById(log, id);
+            var result = GetJobById(log, id, code);
 
             if (result.Result == null)
             {
@@ -107,11 +107,11 @@ namespace HW4AzureFunctions
         /// </summary>
         /// <param name="log">The log.</param>
         /// <param name="jobId">The job identifier.</param>
-        private static async Task<JobEntity> GetJobById(ILogger log, string jobId)
+        private static async Task<JobEntity> GetJobById(ILogger log, string jobId, string code)
         {
             log.LogInformation(string.Format("Gathering request for jobId: [0]", jobId));
 
-            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY, ConfigSettings.SAS);
+            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY, code);
             return await jobTable.RetrieveJobEntity(jobId);
         }
     }

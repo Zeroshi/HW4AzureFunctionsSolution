@@ -5,7 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using Microsoft.Azure.WebJobs;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace HW4AzureFunctions.Entities
 {
@@ -41,7 +45,7 @@ namespace HW4AzureFunctions.Entities
             StorageCredentials sasCredentials = new StorageCredentials(sharedAccessSignature);
 
             // Create the table client.
-            _tableClient = new CloudTableClient(new Uri("http://127.0.0.1:10002/devstoreaccount1", false), sasCredentials);
+            _tableClient = new CloudTableClient(new Uri("https://azurestorageassignment3.azurewebsites.net", false), sasCredentials);
 
             // Create the CloudTable object that represents the "jobentity" table.
             _table = _tableClient.GetTableReference(ConfigSettings.JOBS_TABLENAME);
@@ -50,6 +54,36 @@ namespace HW4AzureFunctions.Entities
 
             _partitionKey = partitionKey;
         }
+
+        public async void ClearContainers(ILogger log)
+        {
+            string storageConnectionString =
+                Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTIONSTRING_NAME);
+
+            BlobContainerClient greyscaleContainerClient =
+                new BlobContainerClient(storageConnectionString, "converttogreyscale");
+            greyscaleContainerClient.GetBlobs();
+
+
+            var blobs = greyscaleContainerClient.GetBlobs();
+            foreach (BlobItem blobItem in blobs)
+            {
+                await greyscaleContainerClient.DeleteBlobIfExistsAsync(blobItem.Name);
+                log.LogInformation($"GreyScale Blob: {blobItem.Name} was deleted successfully.");
+            }
+
+            BlobContainerClient sepiaContainerClient =
+                new BlobContainerClient(storageConnectionString, "converttosepia");
+            sepiaContainerClient.GetBlobs();
+
+            blobs = sepiaContainerClient.GetBlobs();
+            foreach (BlobItem blobItem in blobs)
+            {
+                await sepiaContainerClient.DeleteBlobIfExistsAsync(blobItem.Name);
+                log.LogInformation($"Sepia Blob: {blobItem.Name} was deleted successfully.");
+            }
+        }
+
 
         /// <summary>
         /// Retrieves the job entity.

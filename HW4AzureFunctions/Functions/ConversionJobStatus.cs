@@ -76,7 +76,7 @@ namespace HW4AzureFunctions
         {
             log.LogInformation(string.Format("Gathering all request"));
 
-            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY, ConfigSettings.SAS);
+            JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
             return await jobTable.RetrieveJobEntities();
         }
     }
