@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Microsoft.Azure.WebJobs;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.Azure.WebJobs.Description;
 
 namespace HW4AzureFunctions.Entities
 {
@@ -44,30 +45,30 @@ namespace HW4AzureFunctions.Entities
 
         }
 
-        /// <summary>
-        /// Create job table with SAS
-        /// </summary>
-        /// <param name="log"></param>
-        /// <param name="partitionKey"></param>
-        /// <param name="sharedAccessSignature"></param>
-        public JobTable(ILogger log, string partitionKey, string sharedAccessSignature)
-        {
-            string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTIONSTRING_NAME);
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+        ///// <summary>
+        ///// Create job table with SAS
+        ///// </summary>
+        ///// <param name="log"></param>
+        ///// <param name="partitionKey"></param>
+        ///// <param name="sharedAccessSignature"></param>
+        //public JobTable(ILogger log, string partitionKey, string sharedAccessSignature)
+        //{
+        //    string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTIONSTRING_NAME);
+        //    CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
 
-            //convert to credentials
-            StorageCredentials sasCredentials = new StorageCredentials(sharedAccessSignature);
+        //    //convert to credentials
+        //    StorageCredentials sasCredentials = new StorageCredentials(sharedAccessSignature);
 
-            // Create the table client.
-            _tableClient = new CloudTableClient(new Uri("https://azurestorageassignment3.azurewebsites.net", false), sasCredentials);
+        //    // Create the table client.
+        //    _tableClient = new CloudTableClient(new Uri("https://azurestorageassignment3.azurewebsites.net", false), sasCredentials);
 
-            // Create the CloudTable object that represents the "jobentity" table.
-            _table = _tableClient.GetTableReference(ConfigSettings.JOBS_TABLENAME);
+        //    // Create the CloudTable object that represents the "jobentity" table.
+        //    _table = _tableClient.GetTableReference(ConfigSettings.JOBS_TABLENAME);
 
-            _table.CreateIfNotExistsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        //    _table.CreateIfNotExistsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
-            _partitionKey = partitionKey;
-        }
+        //    _partitionKey = partitionKey;
+        //}
 
         /// <summary>
         /// Clear Sepia and GreyScale containers
@@ -117,10 +118,11 @@ namespace HW4AzureFunctions.Entities
             return retrievedResult.Result as JobEntity;
         }
 
+
         /// <summary>
-        /// Retrieves all job entities.
+        /// Returns all job entities
         /// </summary>
-        /// <returns>JobEntity.</returns>
+        /// <returns></returns>
         public async Task<List<JobEntity>> RetrieveJobEntities()
         {
             TableContinuationToken token = null;
@@ -132,7 +134,14 @@ namespace HW4AzureFunctions.Entities
                 var queryResult = Task.Run(() => _table.ExecuteQuerySegmentedAsync(q, token)).GetAwaiter().GetResult();
                 foreach (var item in queryResult.Results)
                 {
-                    result.Add(item);
+                    var blob = new JobEntity();
+                    blob.JobId = item.JobId;
+                    blob.ImageConversionMode = item.ImageConversionMode;
+                    blob.Status = item.Status;
+                    blob.StatusDescription = item.StatusDescription;
+                    blob.ImageSource = item.ImageSource;
+                    blob.ImageResult = item.ImageResult;
+                    result.Add(blob);
                 }
                 token = queryResult.ContinuationToken;
             } while (token != null);

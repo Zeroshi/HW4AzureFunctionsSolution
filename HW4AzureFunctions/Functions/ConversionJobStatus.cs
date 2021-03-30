@@ -22,36 +22,35 @@ namespace HW4AzureFunctions
 
         [FunctionName("ConversionJobStatus")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = route)] HttpRequest req, string code,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = route)] HttpRequest req, ILogger log)
         {
             try
             {
                 log.LogInformation("C# HTTP trigger function processed a request.");
 
-                //return error if nukll
-                if (code == null)
-                {
-                    var error = new ErrorResponse();
-                    error.ErrorNumber = 4;
-                    error.ParameterName = "code";
-                    error.ParameterValue = code;
-                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
+                //return error if null
+                //if (code == null)
+                //{
+                //    var error = new ErrorResponse();
+                //    error.ErrorNumber = 4;
+                //    error.ParameterName = "code";
+                //    error.ParameterValue = code;
+                //    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
 
-                    return new BadRequestObjectResult(error);
-                }
+                //    return new BadRequestObjectResult(error);
+                //}
 
-                //return error if blank
-                if (code == string.Empty)
-                {
-                    var error = new ErrorResponse();
-                    error.ErrorNumber = 2;
-                    error.ParameterName = "code";
-                    error.ParameterValue = code;
-                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
+                ////return error if blank
+                //if (code == string.Empty)
+                //{
+                //    var error = new ErrorResponse();
+                //    error.ErrorNumber = 2;
+                //    error.ParameterName = "code";
+                //    error.ParameterValue = code;
+                //    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
 
-                    return new BadRequestObjectResult(error);
-                }
+                //    return new BadRequestObjectResult(error);
+                //}
 
                 //string name = req.Query["name"];
 
@@ -69,7 +68,7 @@ namespace HW4AzureFunctions
                 var results = GetJobs(log);
 
                 //return all rows to client
-                return new OkObjectResult(results);
+                return new OkObjectResult(results.Result);
             }
             catch (Exception ex)
             {
