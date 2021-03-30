@@ -20,9 +20,16 @@ namespace HW4AzureFunctions.Entities
         private string _partitionKey;
         private ILogger _log;
 
+        /// <summary>
+        /// Create Job Table without SAS
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="partitionKey"></param>
         public JobTable(ILogger log, string partitionKey)
         {
-            string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTIONSTRING_NAME);
+
+            string storageConnectionString =
+                Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTIONSTRING_NAME);
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
 
             // Create the table client.
@@ -34,8 +41,15 @@ namespace HW4AzureFunctions.Entities
             _table.CreateIfNotExistsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
             _partitionKey = partitionKey;
+
         }
 
+        /// <summary>
+        /// Create job table with SAS
+        /// </summary>
+        /// <param name="log"></param>
+        /// <param name="partitionKey"></param>
+        /// <param name="sharedAccessSignature"></param>
         public JobTable(ILogger log, string partitionKey, string sharedAccessSignature)
         {
             string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTIONSTRING_NAME);
@@ -55,6 +69,10 @@ namespace HW4AzureFunctions.Entities
             _partitionKey = partitionKey;
         }
 
+        /// <summary>
+        /// Clear Sepia and GreyScale containers
+        /// </summary>
+        /// <param name="log"></param>
         public async void ClearContainers(ILogger log)
         {
             string storageConnectionString =
@@ -145,7 +163,7 @@ namespace HW4AzureFunctions.Entities
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task UpdateJobEntityStatus(string jobId, string status, string imageConversionMode, string statusDescription)
+        public async Task UpdateJobEntityStatus(string jobId, int status, string imageConversionMode, string statusDescription)
         {
             JobEntity jobEntityToReplace = await RetrieveJobEntity(jobId);
             if (jobEntityToReplace != null)
@@ -165,7 +183,7 @@ namespace HW4AzureFunctions.Entities
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task InsertOrReplaceJobEntity(string jobId, string status, string imageConversionMode, string imageSource)
+        public async Task InsertOrReplaceJobEntity(string jobId, int status, string imageConversionMode, string imageSource)
         {
 
             JobEntity jobEntityToInsertOrReplace = new JobEntity();
@@ -186,7 +204,7 @@ namespace HW4AzureFunctions.Entities
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task InsertOrReplaceFailureJobEntity(string jobId, string status, string statusDescription, string imageResult)
+        public async Task InsertOrReplaceFailureJobEntity(string jobId, int status, string statusDescription, string imageResult)
         {
 
             JobEntity jobEntityToInsertOrReplace = new JobEntity();

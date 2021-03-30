@@ -19,7 +19,7 @@ namespace HW4AzureFunctions.Functions
         }
 
         /// <summary>
-        /// Gets the jobid information.
+        /// Clean Containers Sepia and GreyScale.
         /// </summary>
         /// <param name="log">The log.</param>
         /// <param name="jobId">The job identifier.</param>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,49 +25,66 @@ namespace HW4AzureFunctions
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = route)] HttpRequest req, string code,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            try
+            {
+                log.LogInformation("C# HTTP trigger function processed a request.");
 
+                //return error if nukll
+                if (code == null)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 4;
+                    error.ParameterName = "code";
+                    error.ParameterValue = code;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
 
-            if (code == null)
+                    return new BadRequestObjectResult(error);
+                }
+
+                //return error if blank
+                if (code == string.Empty)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 2;
+                    error.ParameterName = "code";
+                    error.ParameterValue = code;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
+
+                    return new BadRequestObjectResult(error);
+                }
+
+                //string name = req.Query["name"];
+
+                //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                //dynamic data = JsonConvert.DeserializeObject(requestBody);
+                //name = name ?? data?.name;
+
+                //string responseMessage = string.IsNullOrEmpty(name)
+                //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+                //query
+
+                //get all of the rows
+                var results = GetJobs(log);
+
+                //return all rows to client
+                return new OkObjectResult(results);
+            }
+            catch (Exception ex)
             {
                 var error = new ErrorResponse();
-                error.ErrorNumber = 4;
-                error.ParameterName = "code";
-                error.ParameterValue = code;
-                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
+                error.ErrorNumber = 3;
+                error.ParameterName = "";
+                error.ParameterValue = "";
+                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(3);
 
-                return new BadRequestObjectResult(error);
+                return new NotFoundObjectResult(error);
             }
-
-            if (code == string.Empty)
-            {
-                var error = new ErrorResponse();
-                error.ErrorNumber = 2;
-                error.ParameterName = "code";
-                error.ParameterValue = code;
-                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
-
-                return new BadRequestObjectResult(error);
-            }
-
-            //string name = req.Query["name"];
-
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            //query
-            var results = GetJobs(log);
-
-            return new OkObjectResult(results);
         }
 
         /// <summary>
-        /// Gets the jobid information.
+        /// Get all of the jobs
         /// </summary>
         /// <param name="log">The log.</param>
         /// <param name="jobId">The job identifier.</param>

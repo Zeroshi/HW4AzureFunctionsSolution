@@ -56,7 +56,7 @@ namespace HW4AzureFunctions
                 _jobId = Guid.NewGuid().ToString();
 
                 //Populate Job Table
-                await InsertJobTableWithStatus(log, _jobId, "1", ConversionType, cloudBlockBlob.Uri.AbsolutePath);
+                await InsertJobTableWithStatus(log, _jobId, 1, ConversionType, cloudBlockBlob.Uri.AbsoluteUri);
 
                 // Create or retrieve a reference to the converted images container
                 CloudBlobContainer convertedImagesContainer = blobClient.GetContainerReference(ConfigSettings.CONVERTED_IMAGES_CONTAINERNAME);
@@ -81,7 +81,7 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        private static async Task InsertJobTableWithStatus(ILogger log, string jobId, string status,
+        private static async Task InsertJobTableWithStatus(ILogger log, string jobId, int status,
             string imageConversionMode, string imageSource)
         {
             JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
@@ -95,7 +95,7 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, string status,
+        private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, int status,
             string imageConversionMode, string statusDescription)
         {
             JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
@@ -151,7 +151,7 @@ namespace HW4AzureFunctions
         {
             try
             {
-                await UpdateJobTableWithStatus(log, _jobId, "2", "Sepia", "Converting to Sepia");
+                await UpdateJobTableWithStatus(log, _jobId, 2, "Sepia", "Converting to Sepia");
 
                 uploadedImage.Seek(0, SeekOrigin.Begin);
 

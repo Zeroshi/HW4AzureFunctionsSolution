@@ -21,6 +21,7 @@ namespace AzureStorage.Entities
             ErrorMessages.Add(2, "The parameter is required");
             ErrorMessages.Add(3, "The entity could not be found");
             ErrorMessages.Add(4, "The parameter cannot be null");
+            ErrorMessages.Add(5, "The parameter is too long");
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace HW4AzureFunctions
 
 
             var jobId = Guid.NewGuid().ToString();
-            await UpdateJobTableWithStatus(log, jobId, "4", "Image failed during image conversion process", cloudBlockBlob.Uri.AbsoluteUri);
+            await UpdateJobTableWithStatus(log, jobId, 4, "Image failed during image conversion process", cloudBlockBlob.Uri.AbsoluteUri);
 
         }
 
@@ -38,7 +38,7 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, string status, string statusDescription, string imageResult)
+        private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, int status, string statusDescription, string imageResult)
         {
             JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
             await jobTable.InsertOrReplaceFailureJobEntity(jobId, status, statusDescription, imageResult);

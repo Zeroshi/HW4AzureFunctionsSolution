@@ -26,69 +26,91 @@ namespace HW4AzureFunctions
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = route)] HttpRequest req, string id, string code,
             ILogger log)
         {
-            ;
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            if (id == null)
+            try
             {
-                var error = new ErrorResponse();
-                error.ErrorNumber = 4;
-                error.ParameterName = "id";
-                error.ParameterValue = id;
-                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
+                log.LogInformation("C# HTTP trigger function processed a request.");
 
-                return new BadRequestObjectResult(error);
+                if (id == null)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 4;
+                    error.ParameterName = "id";
+                    error.ParameterValue = id;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
+
+                    return new BadRequestObjectResult(error);
+                }
+
+                if (code == null)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 4;
+                    error.ParameterName = "code";
+                    error.ParameterValue = code;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
+
+                    return new BadRequestObjectResult(error);
+                }
+
+                if (id == string.Empty)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 2;
+                    error.ParameterName = "id";
+                    error.ParameterValue = id;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
+
+                    return new BadRequestObjectResult(error);
+                }
+
+                if (code == string.Empty)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 2;
+                    error.ParameterName = "code";
+                    error.ParameterValue = code;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
+
+                    return new BadRequestObjectResult(error);
+                }
+
+                if (id.Length > 36)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 5;
+                    error.ParameterName = "id";
+                    error.ParameterValue = id;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(5);
+                }
+
+
+
+                //string name = req.Query["id"];
+
+                //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                //dynamic data = JsonConvert.DeserializeObject(requestBody);
+                //name = name ?? data?.name;
+
+                //string responseMessage = string.IsNullOrEmpty(name)
+                //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+                //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+                var result = GetJobById(log, id, code);
+
+                if (result.Result == null)
+                {
+                    var error = new ErrorResponse();
+                    error.ErrorNumber = 3;
+                    error.ParameterName = "id";
+                    error.ParameterValue = id;
+                    error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(3);
+
+                    return new NotFoundObjectResult(error);
+                }
+
+                return new OkObjectResult(result);
             }
-
-            if (code == null)
-            {
-                var error = new ErrorResponse();
-                error.ErrorNumber = 4;
-                error.ParameterName = "code";
-                error.ParameterValue = code;
-                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(4);
-
-                return new BadRequestObjectResult(error);
-            }
-
-            if (id == string.Empty)
-            {
-                var error = new ErrorResponse();
-                error.ErrorNumber = 2;
-                error.ParameterName = "id";
-                error.ParameterValue = id;
-                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
-
-                return new BadRequestObjectResult(error);
-            }
-
-            if (code == string.Empty)
-            {
-                var error = new ErrorResponse();
-                error.ErrorNumber = 2;
-                error.ParameterName = "code";
-                error.ParameterValue = code;
-                error.ErrorDescription = ErrorResponsesInformation.ErrorMessages.GetValueOrDefault(2);
-
-                return new BadRequestObjectResult(error);
-            }
-
-
-
-
-            //string name = req.Query["id"];
-
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            var result = GetJobById(log, id, code);
-
-            if (result.Result == null)
+            catch (Exception ex)
             {
                 var error = new ErrorResponse();
                 error.ErrorNumber = 3;
@@ -98,8 +120,6 @@ namespace HW4AzureFunctions
 
                 return new NotFoundObjectResult(error);
             }
-
-            return new OkObjectResult(result);
         }
 
         /// <summary>
