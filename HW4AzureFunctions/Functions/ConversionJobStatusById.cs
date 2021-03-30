@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AzureStorage.Entities;
@@ -110,7 +111,7 @@ namespace HW4AzureFunctions
                     return new NotFoundObjectResult(error);
                 }
 
-                return new OkObjectResult(result.Result);
+                return new OkObjectResult((JobEntity)result.Result);
             }
             catch (Exception ex)
             {

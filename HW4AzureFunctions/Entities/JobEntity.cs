@@ -10,7 +10,7 @@ namespace HW4AzureFunctions.Entities
     public class JobEntity : TableEntity
     {
         [JsonProperty("jobId")]
-        [MaxLength(36)]
+        [MaxLength(37)] //job ids have 37 at the moment
         public string JobId { get; set; }
         [JsonProperty("imageConversionMode")]
         public string ImageConversionMode { get; set; }
